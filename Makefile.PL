@@ -11,6 +11,7 @@ author 'Michal Špaček <skim@cpan.org>';
 license 'bsd';
 name 'Mock-Person-DE';
 requires 'Exporter' => 0;
+requires 'List::MoreUtils' => 0;
 requires 'Readonly' => 0;
 resources 'bugtracker' => 'https://rt.cpan.org/Public/Dist/Display.html'.
 	'?Name=Mock-Person-DE';
@@ -24,7 +25,7 @@ test_requires 'Test::NoWarnings' => 0;
 test_requires 'Test::Pod' => 0;
 test_requires 'Test::Pod::Coverage' => 0;
 tests_recursive;
-version '0.01';
+version '0.02';
 
 # Run.
 WriteAll();

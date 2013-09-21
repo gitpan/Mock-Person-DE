@@ -7,15 +7,20 @@ use utf8;
 use warnings;
 
 # Modules.
+use List::MoreUtils qw(none);
 use Readonly;
 
 # Constants.
 Readonly::Scalar our $SPACE => q{ };
 Readonly::Array our @EXPORT_OK => qw(first_male first_female middle_female
-	last_male last_female middle_male middle_female name);
+	last_male last_female middle_male middle_female name name_male
+	name_female);
+
+# Variables.
+our $TYPE = 'three';
 
 # Version.
-our $VERSION = '0.01';
+our $VERSION = 0.02;
 
 # First and middle male names.
 our @first_male = our @middle_male = qw(
@@ -362,10 +367,44 @@ sub middle_female {
 # Get random name.
 sub name {
 	my $sex = shift;
-	if (defined $sex && $sex eq 'female') {
-		return first_female().$SPACE.middle_female().$SPACE.last_female();
+	if (! defined $sex || none { $sex eq $_ } qw(female male)) {
+		if ((int(rand(2)) + 1 ) % 2 == 0) {
+			return name_male();
+		} else {
+			return name_female();
+		}
+	} elsif ($sex eq 'female') {
+		return name_female();
+	} elsif ($sex eq 'male') {
+		return name_male();
+	}
+}
+
+# Get random male name.
+sub name_male {
+	if (defined $TYPE && $TYPE eq 'three') {
+		my $first_male = first_male();
+		my $middle_male = middle_male();
+		while ($first_male eq $middle_male) {
+			$middle_male = middle_male();
+		}
+		return $first_male.$SPACE.$middle_male.$SPACE.last_male();
 	} else {
-		return first_male().$SPACE.middle_male().$SPACE.last_male();
+		return first_male().$SPACE.last_male();
+	}
+}
+
+# Get random female name.
+sub name_female {
+	if (defined $TYPE && $TYPE eq 'three') {
+		my $first_female = first_female();
+		my $middle_female = middle_female();
+		while ($first_female eq $middle_female) {
+			$middle_female = middle_female();
+		}
+		return $first_female.$SPACE.$middle_female.$SPACE.last_female();
+	} else {
+		return first_female().$SPACE.last_female();
 	}
 }
 
@@ -419,11 +458,11 @@ L<indiachildnames.com|http://www.indiachildnames.com/top100/germannames.html>
 
 =item B<first_male()>
 
-Returns random fists name of male person.
+Returns random first name of male person.
 
 =item B<first_female()>
 
-Returns random fists name of female person.
+Returns random first name of female person.
 
 =item B<last_male()>
 
@@ -445,7 +484,27 @@ Returns random middle name of female person.
 
 Recieves scalar with sex of the person ('male' or 'female') and returns
 scalar with generated name.
-Default value of $sex variable is 'male'.
+Default value of $sex variable is undef, that means random name.
+
+=item B<name_male()>
+
+Returns random male name.
+
+=item B<name_female()>
+
+Returns random female name.
+
+=back
+
+=head1 VARIABLES
+
+=over 8
+
+=item B<TYPE>
+
+ Name type.
+ Possible values are: 'two', 'three'.
+ Default value is 'three'.
 
 =back
 
@@ -586,11 +645,16 @@ Default value of $sex variable is 'male'.
 =head1 DEPENDENCIES
 
 L<Exporter>,
+L<List::MoreUtils>,
 L<Readonly>.
 
 =head1 SEE ALSO
 
 L<Mock::Person>,
+L<Mock::Person::CZ>,
+L<Mock::Person::EN>,
+L<Mock::Person::SK>,
+L<Mock::Person::SK::ROM>,
 L<Mock::Person::SV>,
 L<Mock::Person::RU>.
 
@@ -610,6 +674,6 @@ BSD license.
 
 =head1 VERSION
 
-0.01
+0.02
 
 =cut
