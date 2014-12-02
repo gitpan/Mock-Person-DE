@@ -126,7 +126,7 @@ Willem
 Yannik
 );
 
-# First nad middle female names.
+# First and middle female names.
 our @first_female = our @middle_female = qw(
 Alexandra
 Amelie
@@ -422,15 +422,27 @@ Mock::Person::DE - Generate random sets of German names.
 
 =head1 SYNOPSIS
 
- use Mock::Person::DE qw(first_male first_female last_male last_female
-         middle_male middle_female name);
- my $first_male = first_male();
- my $first_female = first_female();
- my $last_male = last_male();
- my $last_female = last_female();
- my $middle_male = middle_male();
- my $middle_female = middle_female();
- my $name = name($sex);
+use Encode qw(encode_utf8);
+use Mock::Person::DE qw(
+    first_male
+    first_female
+    last_male
+    last_female
+    middle_male
+    middle_female
+    name);
+
+my $first_male    = first_male();
+my $first_female  = first_female();
+my $last_male     = last_male();
+my $male_name     = name('male');
+print "Name (Male)  : ", encode_utf8($male_name)  , "\n";
+
+my $last_female   = last_female();
+my $middle_male   = middle_male();
+my $middle_female = middle_female();
+my $female_name   = name('female');
+print "Name (Female): ", encode_utf8($female_name), "\n";
 
 =head1 DESCRIPTION
 
